@@ -1,0 +1,1 @@
+This section explains the storage assessment. The block devices, mounted filesystems, disk usage, and inode usage were examined to evaluate storage health. The findings show that the environment currently has sufficient storage space and inode capacity, while also suggesting basic practices for long-term management.

@@ -1,0 +1,64 @@
+Storage Assessment Report
+=========================
+
+1) Available storage devices
+Command:
+lsblk
+Output:
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+loop0 7:0 0 63.8M 1 loop
+loop1 7:1 0 91.7M 1 loop
+loop2 7:2 0 49.3M 1 loop
+loop3 7:3 0 257G 0 loop
+loop4 7:4 0 32G 0 loop /workspaces
+sda 8:0 0 30G 0 disk
+├─sda1 8:1 0 29.9G 0 part /workspaces/.codespaces/shared
+└─sda15 8:15 0 106M 0 part
+sdb 8:16 0 45G 0 disk
+└─sdb1 8:17 0 45G 0 part /tmp
+sdc 8:32 0 512G 0 disk
+└─sdc1 8:33 0 512G 0 part
+
+Observation:
+The environment exposes several block devices, including system disks and a larger additional disk that is available for future storage use.
+
+2) Mounted file systems
+Command:
+mount | head -5
+Output:
+overlay on / type overlay (rw,relatime,...)
+proc on /proc type proc (rw,nosuid,nodev,noexec,relatime)
+tmpfs on /dev type tmpfs (rw,nosuid,size=65536k,mode=755,inode64)
+devpts on /dev/pts type devpts (rw,nosuid,noexec,relatime,gid=5,mode=620,ptmxmode=666)
+sysfs on /sys type sysfs (rw,nosuid,nodev,noexec,relatime)
+
+Observation:
+The root filesystem uses an overlay mount and there is a separate mounted /tmp filesystem for temporary data.
+
+3) Disk usage and inode utilization
+Command:
+df -h
+Output:
+Filesystem Size Used Avail Use% Mounted on
+overlay 32G 9.6G 21G 33% /
+tmpfs 64M 0 64M 0% /dev
+/dev/root 29G 24G 5.6G 81% /vscode
+/dev/loop4 32G 9.6G 21G 33% /workspaces
+/dev/sdb1 44G 2.6G 40G 7% /tmp
+
+Command:
+df -i
+Output:
+Filesystem Inodes IUsed IFree IUse% Mounted on
+overlay 2097152 203042 1894110 10% /
+tmpfs 1016900 213 1016687 1% /dev
+/dev/root 3870720 243377 3627343 7% /vscode
+/dev/loop4 2097152 203042 1894110 10% /workspaces
+/dev/sdb1 2949120 34 2949086 1% /tmp
+
+Observation:
+Disk and inode usage are currently healthy, and there is ample free space available on the mounted filesystems.
+
+4) Storage health observations and recommendations
+The storage environment appears healthy with no immediate space shortage. To improve utilization, monitor growth in /workspaces and /tmp, clean temporary files regularly, and place large application logs or datasets on dedicated storage if usage increases.
+

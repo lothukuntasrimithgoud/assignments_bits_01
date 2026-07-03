@@ -1,0 +1,59 @@
+File Access and I/O Investigation Report
+======================================
+
+1) Creating a sample log file
+Command:
+echo "sample log line" > app.log
+Output:
+(no output)
+
+Observation:
+A sample log file was created to test file access and descriptor handling.
+
+2) Open files and file descriptors
+Command:
+lsof | head -n 20
+Output:
+COMMAND PID TID TASKCMD USER FD TYPE DEVICE SIZE/OFF NODE NAME
+...
+
+Command:
+exec 3<app.log
+Command:
+lsof -p $$
+Output:
+... bash 9221 codespace 3r REG 7,4 16 1310807 /workspaces/assignments_bits_01/q-4/app.log
+
+Command:
+ls -l /proc/$$/fd | grep app.log
+Output:
+lr-x------ 1 codespace codespace 64 Jul 3 17:24 3 -> /workspaces/assignments_bits_01/q-4/app.log
+
+Observation:
+The shell opened the file as file descriptor 3, and this was visible through both lsof and the /proc filesystem.
+
+3) Standard output, standard error, and combined redirection
+Command:
+ls -l > stdout.txt
+Command:
+ls /not_a_real_path 2> stderr.txt
+Command:
+(ls -l && ls /not_a_real_path) > combined.txt 2>&1
+
+Observation:
+The regular directory listing was redirected to stdout.txt, the error message went to stderr.txt, and both streams were combined into combined.txt.
+
+4) Resource limits
+Command:
+ulimit -a
+Output:
+open files (-n) 524288
+file size (-f) unlimited
+max user processes (-u) unlimited
+...
+
+Observation:
+The shell has a very large open-files limit and unrestricted file size and process limits, which is suitable for regular development work.
+
+5) Conclusion
+Linux manages I/O through file descriptors such as 0, 1, 2 for standard input, output, and error. Redirection uses these descriptors to route data to files or other streams, while the kernel tracks open files and resource limits for each process.

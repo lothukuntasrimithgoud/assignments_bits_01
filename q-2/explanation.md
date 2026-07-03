@@ -1,0 +1,1 @@
+This section explains the secure workspace setup. The project directory structure was created and permissions were changed from wide-open access to a restricted mode that protects sensitive project files. The observed permissions and umask values show how Linux controls access at both the directory and file levels.

@@ -1,0 +1,1 @@
+This section explains the environment verification steps. The commands confirmed the active username, group membership, shell, current directory, available workspace contents, and internet connectivity. These observations establish that the Linux environment is accessible and ready for further lab tasks.

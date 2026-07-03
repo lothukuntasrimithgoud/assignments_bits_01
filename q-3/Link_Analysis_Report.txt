@@ -1,0 +1,83 @@
+File System and Link Analysis Report
+===================================
+
+1) Creating the original file and links
+Command:
+echo "Linux link test file" > original.txt
+Output:
+(no output)
+
+Command:
+ln original.txt hardlink.txt
+Command:
+ln -s original.txt symlink.txt
+
+Observation:
+A regular file was created first, then a hard link and a symbolic link were created to compare how each type behaves.
+
+2) Inode information
+Command:
+ls -li
+Output:
+total 8
+1310805 -rw-rw-rw- 2 codespace codespace 21 Jul 3 17:21 hardlink.txt
+1310805 -rw-rw-rw- 2 codespace codespace 21 Jul 3 17:21 original.txt
+1310806 lrwxrwxrwx 1 codespace codespace 12 Jul 3 17:21 symlink.txt -> original.txt
+
+Command:
+stat original.txt hardlink.txt symlink.txt
+Output:
+File: original.txt
+Device: 7,4 Inode: 1310805 Links: 2
+File: hardlink.txt
+Device: 7,4 Inode: 1310805 Links: 2
+File: symlink.txt -> original.txt
+Device: 7,4 Inode: 1310806 Links: 1
+
+Observation:
+The hard link shares the same inode as the original file, while the symbolic link has a different inode and points to the target path.
+
+3) Content and link behavior
+Command:
+cat original.txt
+Output:
+Linux link test file
+
+Command:
+cat hardlink.txt
+Output:
+Linux link test file
+
+Command:
+cat symlink.txt
+Output:
+Linux link test file
+
+Observation:
+Both the original file and the hard link display the same content. The symbolic link also resolves correctly before the target is removed.
+
+4) Effect of deleting the original file
+Command:
+rm original.txt
+Command:
+ls -li
+Output:
+total 4
+1310805 -rw-rw-rw- 1 codespace codespace 21 Jul 3 17:21 hardlink.txt
+1310806 lrwxrwxrwx 1 codespace codespace 12 Jul 3 17:21 symlink.txt -> original.txt
+
+Command:
+cat hardlink.txt
+Output:
+Linux link test file
+
+Command:
+cat symlink.txt
+Output:
+cat: symlink.txt: No such file or directory
+
+Observation:
+Deleting the original file does not affect the hard link because it still points to the same inode. The symbolic link breaks because it depends on the original path.
+
+5) Conclusion
+Hard links are direct aliases of the same inode and remain usable after the original name is removed. Symbolic links are small pointer files that depend on a path, so they break when the target is deleted or moved.

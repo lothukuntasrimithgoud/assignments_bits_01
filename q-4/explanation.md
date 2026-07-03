@@ -1,0 +1,1 @@
+This section explains the file access and I/O investigation. The commands demonstrated how the shell opens files using file descriptors, how standard output and standard error can be redirected, and how resource limits affect process behavior. These observations clarify how Linux handles input and output internally.

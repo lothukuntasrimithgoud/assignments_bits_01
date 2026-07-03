@@ -1,0 +1,1 @@
+This section explains the link analysis experiment. The original file, hard link, and symbolic link were compared using inode and metadata commands so their behavior could be observed directly. The results show that hard links share the same inode while symbolic links point to a path and break if the target is removed.
